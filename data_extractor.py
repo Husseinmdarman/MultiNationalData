@@ -2,8 +2,26 @@ import database_utils
 import data_cleaning
 import pandas as pd
 from typing import Union
+import tabula
 
 class DataExtractor:
+    def retrieve_pdf_data(link: str):
+        """
+         takes in a link as an argument then uses 
+         tabula to extract all pages from the pdf document 
+         and returns a pandas DataFrame.
+
+         input: Link (str) Link to the pdf file
+         Output: Dataframe (Dataframe) DataFrame of the extracted data
+        """
+        # Read pdf into a list of DataFrame
+        list_of_pdf = tabula.read_pdf(link, pages='all', output_format= 'dataframe')
+        
+        #return the first entry in list of DataFrame
+        return (list_of_pdf[0])
+            
+        
+
     def extract_rds_table(engine, table_name: Union[str, list]):
         """
         Extracts the table from the engine and reads it into a pandas Dataframe to return it
@@ -29,10 +47,12 @@ class DataExtractor:
       
         
 
-cred = database_utils.DatabaseConnector.read_db_creds()
-engine = database_utils.DatabaseConnector.init_db_engine(cred)
-list_of_tables = database_utils.DatabaseConnector.list_db_tables(engine)
-pandas_user = DataExtractor.extract_rds_table(engine, list_of_tables)
-cleaned_user_data = data_cleaning.Dataclean.clean_user_data(pandas_user['legacy_users'])
-database_utils.DatabaseConnector.upload_to_db(cleaned_user_data, 'dim_users')
+# cred = database_utils.DatabaseConnector.read_db_creds()
+# engine = database_utils.DatabaseConnector.init_db_engine(cred)
+# list_of_tables = database_utils.DatabaseConnector.list_db_tables(engine)
+# pandas_user = DataExtractor.extract_rds_table(engine, list_of_tables)
+# cleaned_user_data = data_cleaning.Dataclean.clean_user_data(pandas_user['legacy_users'])
+# database_utils.DatabaseConnector.upload_to_db(cleaned_user_data, 'dim_users')
 #cleaned_user_data.to_csv('legacy_users.csv', encoding= 'utf-8-sig')
+df2 = DataExtractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
+
