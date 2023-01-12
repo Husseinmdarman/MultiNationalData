@@ -48,7 +48,6 @@ class Dataclean:
         #Set the correct Date/time format for DOB and join date
         user_dataframe['date_of_birth'] = pd.to_datetime(user_dataframe['date_of_birth']).dt.strftime('%d-%m-%Y')
         user_dataframe['join_date'] = pd.to_datetime(user_dataframe['join_date']).dt.strftime('%d-%m-%Y')
-
         
         #fix the typo GGB to GB country code
         user_dataframe['country_code'] = user_dataframe['country_code'].str.replace("GGB", "GB")
@@ -56,7 +55,7 @@ class Dataclean:
         
        # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         #    print(user_dataframe['corrected_phone_number'])
-        
+        print(user_dataframe.dtypes)
         return user_dataframe
 
 

@@ -1,10 +1,24 @@
 import yaml
+import pandas as pd
 from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector:
 
     
-   
+   def upload_to_db(dataframe: pd.DataFrame, table_name: str):
+    """
+    Creates a SQLalchmey engine to a postgres database then uploads the dataframe
+
+    Input: Data to be uploaded (DataFrame)
+    Input: Table_Name to be saved (String)
+    """
+    engine = create_engine('postgresql://postgres:Barcemo123@localhost:5432/Sales_Data')
+    dataframe.to_sql(table_name, engine, if_exists= 'replace')
+    with engine.connect() as con:
+        con.execute('ALTER TABLE dim_users ADD PRIMARY KEY ("user_uuid");')
+    
+    
+    pass
    def list_db_tables(db_engine):
     """
     Using the SQLalchemy Engine, it returns a list of all db tables
