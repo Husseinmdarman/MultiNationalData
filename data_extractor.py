@@ -17,7 +17,6 @@ class DataExtractor:
         # Read pdf into a list of DataFrame
         list_of_pdf = tabula.read_pdf(link, pages='all', output_format= 'dataframe')
         
-        #return the first entry in list of DataFrame
         return (list_of_pdf[0])
             
         
@@ -55,4 +54,6 @@ class DataExtractor:
 # database_utils.DatabaseConnector.upload_to_db(cleaned_user_data, 'dim_users')
 #cleaned_user_data.to_csv('legacy_users.csv', encoding= 'utf-8-sig')
 df2 = DataExtractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
-
+cleaned_card_data = data_cleaning.Dataclean.clean_card_data(df2)
+database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
+#cleaned_card_data.to_csv('card_details.csv')

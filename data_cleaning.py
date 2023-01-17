@@ -2,6 +2,7 @@ import pandas as pd
 import re
 
 class Dataclean:
+
    
     def clean_user_data(user_dataframe : pd.DataFrame):
         """
@@ -55,8 +56,37 @@ class Dataclean:
         
        # with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         #    print(user_dataframe['corrected_phone_number'])
-        print(user_dataframe.dtypes)
+        
         return user_dataframe
+    
+    
+    def clean_card_data(user_card_dataframe : pd.DataFrame):
+      """
+        Takes the legacy_users dataframe and cleans the columns for any null or dirty data
+        finally sets the correct datatypes for the user dataframe
+
+        Input: User dataframe (dataframe)
+        Output: Cleaned user dataframe (Dataframe)
+        """
+
+      #change the data type to string then search for any letters in the card number and drop the rows
+      
+      user_card_dataframe['card_number'] = user_card_dataframe['card_number'].astype('string')
+      user_card_dataframe = user_card_dataframe[user_card_dataframe['card_number'].str.contains("[a-z, A-Z, ?]", regex=True) == False]
+      
+      # set date of  payment using standard format 
+      user_card_dataframe['date_of_payment'] = pd.to_datetime(user_card_dataframe['date_of_payment']).dt.strftime('%d-%m-%Y')
+      
+      #drop na, null records
+      user_card_dataframe.dropna(axis=0, inplace= True)
+
+      #set the column types
+      user_card_dataframe['card_number'] = user_card_dataframe['card_number'].astype('int')
+      user_card_dataframe['card_provider'] = user_card_dataframe['card_provider'].astype('string')
+      
+      return user_card_dataframe
+      
+    
 
 
 def correct_phone_number(row):
