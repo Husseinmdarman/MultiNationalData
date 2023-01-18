@@ -8,6 +8,26 @@ import requests
 
 class DataExtractor:
 
+    def retrieve_stores_data(api_endpoint: str, headers = None):
+        
+        number_of_stores_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
+        stores_data = []
+
+        if(headers == None):
+            with open('API_Keys.yaml', 'r') as stream:
+                headers = yaml.safe_load(stream)
+        
+        number_of_stores = DataExtractor.list_number_of_stores(number_of_stores_endpoint, headers)
+        
+        for store_id in range(0, number_of_stores):
+            url = api_endpoint + f'{store_id}'
+            
+            response = requests.get(url = url, headers = headers)
+            stores_data.append(response.json())
+        store_data = pd.DataFrame(stores_data)
+        
+        return store_data
+
     def list_number_of_stores(api_endpoint: str, headers = None):
         """
          returns the number of stores to extract from
@@ -26,8 +46,8 @@ class DataExtractor:
         response = requests.get(url = api_endpoint, headers= headers)
         
         if response.status_code == 200:
-            #response saved in second json object
-            number_of_stores = response.json()[1]
+            
+            number_of_stores = response.json()['number_stores']
             return number_of_stores
         else: 
             return response.status_code    
@@ -84,4 +104,5 @@ class DataExtractor:
 # cleaned_card_data = data_cleaning.Dataclean.clean_card_data(df2)
 # database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
 #cleaned_card_data.to_csv('card_details.csv')
-DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
+#DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
+DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
