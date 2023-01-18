@@ -3,8 +3,35 @@ import data_cleaning
 import pandas as pd
 from typing import Union
 import tabula
+import yaml
+import requests
 
 class DataExtractor:
+
+    def list_number_of_stores(api_endpoint: str, headers = None):
+        """
+         returns the number of stores to extract from
+
+         input: API endpoint (str)
+            API endpoint which locates the number of stores to extract from
+         headers: Headers needed for API endpoint
+
+         Ouput: number of stores   
+        """
+        if(headers == None):
+            with open('API_Keys.yaml', 'r') as stream:
+                headers = yaml.safe_load(stream)
+        
+        
+        response = requests.get(url = api_endpoint, headers= headers)
+        
+        if response.status_code == 200:
+            #response saved in second json object
+            number_of_stores = response.json()[1]
+            return number_of_stores
+        else: 
+            return response.status_code    
+        
     def retrieve_pdf_data(link: str):
         """
          takes in a link as an argument then uses 
@@ -53,7 +80,8 @@ class DataExtractor:
 # cleaned_user_data = data_cleaning.Dataclean.clean_user_data(pandas_user['legacy_users'])
 # database_utils.DatabaseConnector.upload_to_db(cleaned_user_data, 'dim_users')
 #cleaned_user_data.to_csv('legacy_users.csv', encoding= 'utf-8-sig')
-df2 = DataExtractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
-cleaned_card_data = data_cleaning.Dataclean.clean_card_data(df2)
-database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
+# df2 = DataExtractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
+# cleaned_card_data = data_cleaning.Dataclean.clean_card_data(df2)
+# database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
 #cleaned_card_data.to_csv('card_details.csv')
+DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')

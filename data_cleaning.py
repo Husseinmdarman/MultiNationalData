@@ -69,19 +69,18 @@ class Dataclean:
         Output: Cleaned user dataframe (Dataframe)
         """
 
-      #change the data type to string then search for any letters in the card number and drop the rows
+      #change the data type to string then search for any letters and special characters in the card number and drop the rows
       
       user_card_dataframe['card_number'] = user_card_dataframe['card_number'].astype('string')
       user_card_dataframe = user_card_dataframe[user_card_dataframe['card_number'].str.contains("[a-z, A-Z, ?]", regex=True) == False]
       
       # set date of  payment using standard format 
-      user_card_dataframe['date_of_payment'] = pd.to_datetime(user_card_dataframe['date_of_payment']).dt.strftime('%d-%m-%Y')
+      user_card_dataframe['date_payment_confirmed'] = pd.to_datetime(user_card_dataframe['date_payment_confirmed']).dt.strftime('%d-%m-%Y')
       
       #drop na, null records
       user_card_dataframe.dropna(axis=0, inplace= True)
 
       #set the column types
-      user_card_dataframe['card_number'] = user_card_dataframe['card_number'].astype('int')
       user_card_dataframe['card_provider'] = user_card_dataframe['card_provider'].astype('string')
       
       return user_card_dataframe
@@ -90,6 +89,18 @@ class Dataclean:
 
 
 def correct_phone_number(row):
+  """
+  Takes in a country code and phone number from the record then cleans the phone number
+  by removing special chars other than digits then removes any trailing zero
+
+  Input: Row (Dataframe)
+  Row is a dataframe containing columns country code and phone number
+
+  Output: Corrected Phone number 
+  Corrected phone number returned after all the cleaning steps were done
+  """
+
+
 
   isd_code_map = { "GB": "+44", "DE": "+49", "US": "+1" }
   

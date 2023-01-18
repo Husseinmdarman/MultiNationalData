@@ -13,9 +13,9 @@ class DatabaseConnector:
     Input: Table_Name to be saved (String)
     """
     engine = create_engine('postgresql://postgres:Barcemo123@localhost:5432/Sales_Data')
-    dataframe.to_sql(table_name, engine, if_exists= 'replace')
-    with engine.connect() as con:
-        con.execute('ALTER TABLE dim_users ADD PRIMARY KEY ("user_uuid");')
+    dataframe.to_sql(table_name, engine, if_exists= 'replace', index= False)
+    # with engine.connect() as con:
+    #     con.execute('ALTER TABLE dim_users ADD PRIMARY KEY ("user_uuid");')
     
     
     pass
