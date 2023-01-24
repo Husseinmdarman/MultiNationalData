@@ -58,6 +58,40 @@ class Dataclean:
         #    print(user_dataframe['corrected_phone_number'])
         
         return user_dataframe
+
+    def clean_store_data(store_dataframe: pd.DataFrame):
+      """
+      Takes the store dataframe and cleans the dataframe and
+      then returns the dataframe
+
+      input: 
+          Store_dataframe (pd.Dataframe)
+      Output: 
+          Cleaned_store_dataframe (pd.Dataframe)
+      
+      """
+      #remove Null records from dataframe
+      store_dataframe = store_dataframe[store_dataframe['store_type'].str.contains('NULL') == False]
+      #remove records containing numbers from dataframe
+      store_dataframe = store_dataframe[store_dataframe['store_type'].str.contains("\d", regex=True) == False]
+      
+      #Opening date in corrected format of day, month, year
+      store_dataframe['opening_date'] = pd.to_datetime(store_dataframe['opening_date']).dt.strftime('%d-%m-%Y')
+      
+      #remove letters from staff number column
+      store_dataframe['staff_numbers'] = store_dataframe['staff_numbers'].astype('string')
+      store_dataframe['staff_numbers'] = store_dataframe['staff_numbers'].str.replace("[a-z, A-Z]", "", regex=True)
+      
+      #Drop the duplicated lat column from dataframe 
+      store_dataframe.drop('lat', axis= 1, inplace = True)
+
+      #replace eeAmerica and eeEurope in the continent column with Europe and America respectively
+      store_dataframe['continent'] = store_dataframe['continent'].str.replace("eeAmerica", "America", regex=False)
+      store_dataframe['continent'] = store_dataframe['continent'].str.replace("eeEurope", "Europe", regex=False)
+
+      
+      return store_dataframe
+      
     
     
     def clean_card_data(user_card_dataframe : pd.DataFrame):
@@ -73,7 +107,7 @@ class Dataclean:
       
       user_card_dataframe['card_number'] = user_card_dataframe['card_number'].astype('string')
       user_card_dataframe = user_card_dataframe[user_card_dataframe['card_number'].str.contains("[a-z, A-Z, ?]", regex=True) == False]
-      
+    
       # set date of  payment using standard format 
       user_card_dataframe['date_payment_confirmed'] = pd.to_datetime(user_card_dataframe['date_payment_confirmed']).dt.strftime('%d-%m-%Y')
       

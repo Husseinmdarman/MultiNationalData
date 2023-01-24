@@ -24,6 +24,7 @@ class DataExtractor:
             
             response = requests.get(url = url, headers = headers)
             stores_data.append(response.json())
+        
         store_data = pd.DataFrame(stores_data)
         
         return store_data
@@ -105,4 +106,6 @@ class DataExtractor:
 # database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
 #cleaned_card_data.to_csv('card_details.csv')
 #DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
-DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
+store_data = DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
+store_data = data_cleaning.Dataclean.clean_store_data(store_data)
+store_data.to_csv('store_details.csv')
