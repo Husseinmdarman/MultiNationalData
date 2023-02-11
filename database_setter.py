@@ -10,10 +10,22 @@ class data_setter:
          con.execute(f'{query}')
          
 
-set_long_statement = f"""UPDATE public.dim_store_details
+update_dim_products = """
+                    UPDATE public.dim_products
+                    SET product_price = REPLACE(product_price, '£', ''), weight = REPLACE(weight, 'kg', '');"""
+
+update_long_statement = f"""UPDATE public.dim_store_details
 SET longitude = '{math.nan}'
 WHERE store_type = 'Web Portal';"""
-         
+
+dim_products_rename_product_price_col = """
+                    ALTER TABLE public.dim_products
+                    RENAME COLUMN product_price to product_price_£;"""
+
+dim_products_rename_weight_col = """
+                    ALTER TABLE public.dim_products
+                    RENAME COLUMN weight to weight_kg;"""
+
 orders_table_setter = """ALTER TABLE public.orders_table ALTER COLUMN date_uuid TYPE UUID USING date_uuid::uuid, 
         ALTER COLUMN user_uuid TYPE UUID USING user_uuid::uuid,
         ALTER COLUMN card_number TYPE VARCHAR(20) using card_number::varchar(20),
@@ -41,4 +53,4 @@ dim_store_details_setter = """ALTER TABLE public.dim_store_details ALTER COLUMN 
                     DROP COLUMN index;"""
 
 setter = data_setter()
-setter.send_query(dim_store_details_setter)
+setter.send_query(dim_products_rename_weight_col)
