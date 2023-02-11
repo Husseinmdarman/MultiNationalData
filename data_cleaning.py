@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+import sys
 
 class Dataclean:
 
@@ -58,6 +59,54 @@ class Dataclean:
         #    print(user_dataframe['corrected_phone_number'])
         
         return user_dataframe
+    
+    def clean_dateTime_data(dateTime_dataframe: pd.DataFrame):
+      #remove any digits from timePeriod which includes duaod8a8d
+      dateTime_dataframe = dateTime_dataframe[dateTime_dataframe['time_period'].str.contains("\d", regex=True) == False]
+      dateTime_dataframe = dateTime_dataframe[dateTime_dataframe['time_period'].str.contains('NULL') == False]
+      
+      return dateTime_dataframe
+    
+    def clean_orders_data(orders_dataframe: pd.DataFrame):
+      orders_dataframe.drop(columns=['first_name','last_name','1'], inplace= True)
+      return orders_dataframe
+    def clean_product_details(product_dataframe: pd.DataFrame):
+      print(product_dataframe.columns)
+      product_dataframe = product_dataframe[product_dataframe['removed'].str.contains('NULL') == False]
+      searchfor = ['Still_avaliable', 'Removed']
+      product_dataframe = product_dataframe[product_dataframe['removed'].str.contains('|'.join(searchfor))]
+      product_dataframe.to_csv('weight_cleaned.csv')
+      
+      product_dataframe['weight']= product_dataframe['weight'].apply(Dataclean.convert_product_weights)
+      product_dataframe.drop(columns=['Unnamed: 0'], inplace= True)
+      
+      return product_dataframe
+
+    def convert_product_weights(row):
+      #weights will be given one by one first we check if it containst a kg then we do nothing
+      
+      if('kg' in row):
+         return row
+      elif(('g' in row and "x" in row)): #if the row contains an X, we will have to multiply it to get the correct weight then
+       data = '10 x 2g'
+       
+       row = re.sub("[g,ml]","",row)
+       
+       #row= row.str.replace("[^a-z]\S", "", regex=True)
+       split = row.split('x')
+       new_weight= int(split[0]) * float(split[-1])
+       weight_converted_kg = str(new_weight / 1000) + 'kg'
+       row = weight_converted_kg
+       
+       return row
+      elif(('g' in row) or ('ml' in row)):
+       row = re.sub("[g,ml]","",row)
+       row=row.rstrip('.')
+       converted_weight = str(float(row)/1000) + 'kg'
+       row = converted_weight
+       return row
+
+      
 
     def clean_store_data(store_dataframe: pd.DataFrame):
       """

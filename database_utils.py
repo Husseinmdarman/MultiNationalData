@@ -14,8 +14,8 @@ class DatabaseConnector:
     """
     engine = create_engine('postgresql://postgres:Barcemo123@localhost:5432/Sales_Data')
     dataframe.to_sql(table_name, engine, if_exists= 'replace', index= False)
-    # with engine.connect() as con:
-    #     con.execute('ALTER TABLE dim_users ADD PRIMARY KEY ("user_uuid");')
+    with engine.connect() as con:
+        con.execute('ALTER TABLE public.dim_date_times ALTER COLUMN month TYPE INT USING month::integer;')
     
     
     pass

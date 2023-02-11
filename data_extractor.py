@@ -5,8 +5,37 @@ from typing import Union
 import tabula
 import yaml
 import requests
+import boto3
+import io
+
 
 class DataExtractor:
+    def extract_from_request():
+        response = requests.get('https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json')
+        
+        
+        return(pd.DataFrame(response.json()))
+    
+    def extract_from_s3(s3_address: str):
+        """
+        Takes a s3 bucket and returns a dataframe of the contents
+
+        Inputs: 
+            s3_address(str): the address of the s3 buckets
+        Ouput: 
+            extract_s3_dataframe(Dataframe): returns the s3 bucket in a dataframe5
+        """
+        
+        client = boto3.client('s3')
+        bucket, key = s3_address.split('/',2)[-1].split('/',1)
+        
+        object_response = client.get_object(Bucket=bucket, Key=key)
+        
+        
+        product_dataframe = pd.read_csv(io.BytesIO(object_response['Body'].read()))
+        
+        return product_dataframe
+        
 
     def retrieve_stores_data(api_endpoint: str, headers = None):
         
@@ -97,6 +126,13 @@ class DataExtractor:
 # cred = database_utils.DatabaseConnector.read_db_creds()
 # engine = database_utils.DatabaseConnector.init_db_engine(cred)
 # list_of_tables = database_utils.DatabaseConnector.list_db_tables(engine)
+# print(list_of_tables)
+# order_table = DataExtractor.extract_rds_table(engine, 'orders_table')
+# cleaned_order_table = data_cleaning.Dataclean.clean_orders_data(order_table)
+# database_utils.DatabaseConnector.upload_to_db(cleaned_order_table, 'orders_table')
+date_time_df = DataExtractor.extract_from_request()
+cleaned_date_time_df =data_cleaning.Dataclean.clean_dateTime_data(date_time_df)
+database_utils.DatabaseConnector.upload_to_db(cleaned_date_time_df, 'dim_date_times')
 # pandas_user = DataExtractor.extract_rds_table(engine, list_of_tables)
 # cleaned_user_data = data_cleaning.Dataclean.clean_user_data(pandas_user['legacy_users'])
 # database_utils.DatabaseConnector.upload_to_db(cleaned_user_data, 'dim_users')
@@ -106,6 +142,10 @@ class DataExtractor:
 # database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
 #cleaned_card_data.to_csv('card_details.csv')
 #DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
-store_data = DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
-store_data = data_cleaning.Dataclean.clean_store_data(store_data)
-store_data.to_csv('store_details.csv')
+# store_data = DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
+# store_data = data_cleaning.Dataclean.clean_store_data(store_data)
+# database_utils.DatabaseConnector.upload_to_db(store_data, 'dim_store_details')
+# products_data = DataExtractor.extract_from_s3('s3://data-handling-public/products.csv')
+# cleaned_products =data_cleaning.Dataclean.clean_product_details(products_data)
+# database_utils.DatabaseConnector.upload_to_db(cleaned_products, 'dim_products')
+
