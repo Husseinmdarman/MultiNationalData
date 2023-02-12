@@ -14,8 +14,8 @@ class DatabaseConnector:
     """
     engine = create_engine('postgresql://postgres:Barcemo123@localhost:5432/Sales_Data')
     dataframe.to_sql(table_name, engine, if_exists= 'replace', index= False)
-    with engine.connect() as con:
-        con.execute('ALTER TABLE public.dim_date_times ALTER COLUMN month TYPE INT USING month::integer;')
+    # with engine.connect() as con:
+    #     con.execute('ALTER TABLE public.dim_date_times ALTER COLUMN month TYPE INT USING month::integer;')
     
     
     pass
@@ -63,6 +63,6 @@ class DatabaseConnector:
            
     return data_loaded
 
-dictionary_cred = DatabaseConnector.read_db_creds()
-engine = DatabaseConnector.init_db_engine(database_credentials=dictionary_cred)
-DatabaseConnector.list_db_tables(engine)
+# dictionary_cred = DatabaseConnector.read_db_creds()
+# engine = DatabaseConnector.init_db_engine(database_credentials=dictionary_cred)
+# DatabaseConnector.list_db_tables(engine)
