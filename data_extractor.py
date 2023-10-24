@@ -145,8 +145,8 @@ class DataExtractor:
 # store_data = DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
 # store_data = data_cleaning.Dataclean.clean_store_data(store_data)
 # database_utils.DatabaseConnector.upload_to_db(store_data, 'dim_store_details')
-products_data = DataExtractor.extract_from_s3('s3://data-handling-public/products.csv')
-cleaned_products =data_cleaning.Dataclean.clean_product_details(products_data)
-cleaned_products.to_csv('cleaned_products.csv')
+# products_data = DataExtractor.extract_from_s3('s3://data-handling-public/products.csv')
+# cleaned_products =data_cleaning.Dataclean.clean_product_details(products_data)
+# cleaned_products.to_csv('cleaned_products.csv')
 #database_utils.DatabaseConnector.upload_to_db(cleaned_products, 'dim_products')
 

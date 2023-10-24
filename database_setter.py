@@ -71,12 +71,6 @@ orders_table_setter = """ALTER TABLE public.orders_table ALTER COLUMN date_uuid 
         ALTER COLUMN product_quantity TYPE SMALLINT using product_quantity::smallint,
         DROP COLUMN level_0,
         DROP COLUMN index;"""
-user_dim_setter = """ALTER TABLE public.dim_users ALTER COLUMN first_name TYPE VARCHAR(255) USING first_name::varchar(255),
-                    ALTER COLUMN last_name TYPE VARCHAR(255) USING last_name::varchar(255),
-                    ALTER COLUMN date_of_birth TYPE DATE USING date_of_birth::date,
-                    ALTER COLUMN country_code TYPE VARCHAR(5) USING country_code::varchar(5),
-                    ALTER COLUMN join_date TYPE DATE USING join_date::date,
-                    ALTER COLUMN user_uuid TYPE UUID USING user_uuid::uuid;"""
 
 update_long_statement = f"""UPDATE public.dim_store_details
 SET longitude = '{math.nan}'
