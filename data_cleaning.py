@@ -17,9 +17,6 @@ class Dataclean:
         user_dataframe.dropna(axis=0, inplace= True)
         # Drop the Unnamed and Index column from the dataframe
         user_dataframe.drop(columns=['index'], inplace= True)
-        
-        #Set the user_uuid as the key since its value is unique
-        #user_dataframe.set_index('user_uuid', inplace = True)
 
         #check for duplicates
         sum_of_duplicates = user_dataframe.duplicated().sum()
@@ -69,7 +66,7 @@ class Dataclean:
       return dateTime_dataframe
     
     def clean_orders_data(orders_dataframe: pd.DataFrame):
-      orders_dataframe.drop(columns=['first_name','last_name','1'], inplace= True)
+      orders_dataframe.drop(columns=['first_name','last_name','1', 'level_0', 'index'], inplace= True)
       return orders_dataframe
     def clean_product_details(product_dataframe: pd.DataFrame):
       print(product_dataframe.columns)
@@ -126,7 +123,7 @@ class Dataclean:
       store_dataframe = store_dataframe[store_dataframe['store_type'].str.contains("\d", regex=True) == False]
       
       #Opening date in corrected format of day, month, year
-      store_dataframe['opening_date'] = pd.to_datetime(store_dataframe['opening_date']).dt.strftime('%d-%m-%Y')
+      store_dataframe['opening_date'] = pd.to_datetime(store_dataframe['opening_date'], format='mixed').dt.strftime('%d-%m-%Y')
       
       #remove letters from staff number column
       store_dataframe['staff_numbers'] = store_dataframe['staff_numbers'].astype('string')
@@ -159,7 +156,7 @@ class Dataclean:
       user_card_dataframe = user_card_dataframe[user_card_dataframe['card_number'].str.contains("[a-z, A-Z, ?]", regex=True) == False]
     
       # set date of  payment using standard format 
-      user_card_dataframe['date_payment_confirmed'] = pd.to_datetime(user_card_dataframe['date_payment_confirmed']).dt.strftime('%d-%m-%Y')
+      user_card_dataframe['date_payment_confirmed'] = pd.to_datetime(user_card_dataframe['date_payment_confirmed'], format='mixed').dt.strftime('%d-%m-%Y')
       
       #drop na, null records
       user_card_dataframe.dropna(axis=0, inplace= True)

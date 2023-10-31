@@ -41,18 +41,23 @@ class DataExtractor:
         
         number_of_stores_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
         stores_data = []
+        url_data = []
 
         if(headers == None):
             with open('API_Keys.yaml', 'r') as stream:
                 headers = yaml.safe_load(stream)
         
         number_of_stores = DataExtractor.list_number_of_stores(number_of_stores_endpoint, headers)
-        
+        print(number_of_stores)
         for store_id in range(0, number_of_stores):
             url = api_endpoint + f'{store_id}'
-            
+            url_data.append(url)
+            print(url_data)
+        for url in url_data:    
             response = requests.get(url = url, headers = headers)
             stores_data.append(response.json())
+            print(stores_data)
+           
         
         store_data = pd.DataFrame(stores_data)
         
@@ -141,7 +146,7 @@ class DataExtractor:
 # cleaned_card_data = data_cleaning.Dataclean.clean_card_data(df2)
 # database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
 #cleaned_card_data.to_csv('card_details.csv')
-#DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
+# DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
 # store_data = DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
 # store_data = data_cleaning.Dataclean.clean_store_data(store_data)
 # database_utils.DatabaseConnector.upload_to_db(store_data, 'dim_store_details')

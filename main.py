@@ -30,8 +30,12 @@ def card_details_table_init():
     database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
 
 def store_details_init():
+    print('start number of stores')
     data_extractor.DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
+    print('done number of stores')
+    print('dyart retirinbing number of stores')
     store_data = data_extractor.DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
+    print('done retirinbing number of stores')
     store_data = data_cleaning.Dataclean.clean_store_data(store_data)
     database_utils.DatabaseConnector.upload_to_db(store_data, 'dim_store_details')
 
@@ -41,7 +45,7 @@ def product_details_init():
     database_utils.DatabaseConnector.upload_to_db(cleaned_products, 'dim_products')
 
 def main():
-    card_details_table_init()
+    product_details_init()
 
 if __name__ == "__main__":
     main()
