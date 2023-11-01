@@ -36,5 +36,6 @@ ALTER COLUMN product_code TYPE VARCHAR(14) USING product_code::varchar(14),
 ALTER COLUMN date_added TYPE DATE USING date_added::date,
 ALTER COLUMN uuid TYPE UUID USING uuid::uuid,
 ALTER COLUMN still_available TYPE BOOL using still_available::bool,
-ALTER COLUMN weight_class TYPE VARCHAR(20) USING weight_class::varchar(20);
+ALTER COLUMN weight_class TYPE VARCHAR(20) USING weight_class::varchar(20),
+ADD PRIMARY KEY (product_code);
 

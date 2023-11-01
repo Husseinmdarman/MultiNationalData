@@ -153,7 +153,8 @@ class Dataclean:
       #change the data type to string then search for any letters and special characters in the card number and drop the rows
       
       user_card_dataframe['card_number'] = user_card_dataframe['card_number'].astype('string')
-      user_card_dataframe = user_card_dataframe[user_card_dataframe['card_number'].str.contains("[a-z, A-Z, ?]", regex=True) == False]
+      user_card_dataframe = user_card_dataframe[user_card_dataframe['card_number'].str.contains("[a-z, A-Z]", regex=True) == False]
+      user_card_dataframe['card_number'] = user_card_dataframe['card_number'].str.replace("[?]", "", regex=True)
     
       # set date of  payment using standard format 
       user_card_dataframe['date_payment_confirmed'] = pd.to_datetime(user_card_dataframe['date_payment_confirmed'], format='mixed').dt.strftime('%d-%m-%Y')

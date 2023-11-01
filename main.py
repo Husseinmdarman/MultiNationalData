@@ -45,7 +45,7 @@ def product_details_init():
     database_utils.DatabaseConnector.upload_to_db(cleaned_products, 'dim_products')
 
 def main():
-    product_details_init()
+    order_table_init()
 
 if __name__ == "__main__":
     main()
