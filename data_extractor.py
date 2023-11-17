@@ -7,7 +7,7 @@ import yaml
 import requests
 import boto3
 import io
-
+import concurrent.futures
 
 class DataExtractor:
     def extract_from_request():
@@ -36,7 +36,10 @@ class DataExtractor:
         
         return product_dataframe
         
-
+    def requestHandler(url: str, headers = None):
+        response = requests.get(url = url, headers = headers)
+        return response
+    
     def retrieve_stores_data(api_endpoint: str, headers = None):
         
         number_of_stores_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
@@ -48,15 +51,18 @@ class DataExtractor:
                 headers = yaml.safe_load(stream)
         
         number_of_stores = DataExtractor.list_number_of_stores(number_of_stores_endpoint, headers)
-        print(number_of_stores)
+
         for store_id in range(0, number_of_stores):
             url = api_endpoint + f'{store_id}'
             url_data.append(url)
-            print(url_data)
-        for url in url_data:    
-            response = requests.get(url = url, headers = headers)
-            stores_data.append(response.json())
-            print(stores_data)
+            
+        
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = []
+            for url in url_data:
+                futures.append(executor.submit(DataExtractor.requestHandler,url,headers))
+            for future in concurrent.futures.as_completed(futures):
+                stores_data.append(future.result().json())
            
         
         store_data = pd.DataFrame(stores_data)
