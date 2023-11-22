@@ -9,6 +9,15 @@
             "database": "Sales_Data",
             "username": "postgres",
             "name": "Servers"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Servers",
+            "database": "Sale_Data",
+            "username": "postgres"
         }
     ]
 }

@@ -38,4 +38,3 @@ ALTER COLUMN uuid TYPE UUID USING uuid::uuid,
 ALTER COLUMN still_available TYPE BOOL using still_available::bool,
 ALTER COLUMN weight_class TYPE VARCHAR(20) USING weight_class::varchar(20),
 ADD PRIMARY KEY (product_code);
-

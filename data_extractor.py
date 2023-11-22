@@ -1,5 +1,3 @@
-import database_utils
-import data_cleaning
 import pandas as pd
 from typing import Union
 import tabula
@@ -23,7 +21,7 @@ class DataExtractor:
         Inputs: 
             s3_address(str): the address of the s3 buckets
         Ouput: 
-            extract_s3_dataframe(Dataframe): returns the s3 bucket in a dataframe5
+            extract_s3_dataframe(Dataframe): returns the s3 bucket in a dataframe
         """
         
         client = boto3.client('s3')
@@ -37,10 +35,32 @@ class DataExtractor:
         return product_dataframe
         
     def requestHandler(url: str, headers = None):
+        """
+        Takes a url request returns a response
+
+        Inputs: 
+            url(str): the address of the request
+        Ouput: 
+            response(Response): returns the fetched result from the query
+        
+        """
+        
         response = requests.get(url = url, headers = headers)
+        
         return response
     
     def retrieve_stores_data(api_endpoint: str, headers = None):
+        """
+        Takes the api endpoint for the stores and returns a dataframe of every store owned by the multinational company
+
+
+        Inputs: 
+            api_endpoint(str): the address of where the store data is store
+        Ouput: 
+            stores data (Dataframe): returns the store details in a dataframe
+        
+        """
+     
         
         number_of_stores_endpoint = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
         stores_data = []
@@ -50,14 +70,14 @@ class DataExtractor:
             with open('API_Keys.yaml', 'r') as stream:
                 headers = yaml.safe_load(stream)
         
-        number_of_stores = DataExtractor.list_number_of_stores(number_of_stores_endpoint, headers)
+        number_of_stores = DataExtractor.list_number_of_stores(number_of_stores_endpoint, headers) # gets the interger number of the stores total
 
-        for store_id in range(0, number_of_stores):
+        for store_id in range(0, number_of_stores):  #appends each store api to the store number
             url = api_endpoint + f'{store_id}'
             url_data.append(url)
             
         
-        with concurrent.futures.ThreadPoolExecutor() as executor:
+        with concurrent.futures.ThreadPoolExecutor() as executor: #send each request to a executor 
             futures = []
             for url in url_data:
                 futures.append(executor.submit(DataExtractor.requestHandler,url,headers))
@@ -65,7 +85,7 @@ class DataExtractor:
                 stores_data.append(future.result().json())
            
         
-        store_data = pd.DataFrame(stores_data)
+        store_data = pd.DataFrame(stores_data) #append the completed store_date to the dataframe
         
         return store_data
 
@@ -130,34 +150,4 @@ class DataExtractor:
             
             # returns a dictionary of key, dataFrame pairs such as User: Dataframe
             return dict((table, pd.read_sql_table(f'{table}', engine)) 
-                        for table in table_name)
-      
-        
-
-# cred = database_utils.DatabaseConnector.read_db_creds()
-# engine = database_utils.DatabaseConnector.init_db_engine(cred)
-# list_of_tables = database_utils.DatabaseConnector.list_db_tables(engine)
-# print(list_of_tables)
-# order_table = DataExtractor.extract_rds_table(engine, 'orders_table')
-# cleaned_order_table = data_cleaning.Dataclean.clean_orders_data(order_table)
-# database_utils.DatabaseConnector.upload_to_db(cleaned_order_table, 'orders_table')
-# date_time_df = DataExtractor.extract_from_request()
-# cleaned_date_time_df =data_cleaning.Dataclean.clean_dateTime_data(date_time_df)
-# database_utils.DatabaseConnector.upload_to_db(cleaned_date_time_df, 'dim_date_times')
-# pandas_user = DataExtractor.extract_rds_table(engine, list_of_tables)
-# cleaned_user_data = data_cleaning.Dataclean.clean_user_data(pandas_user['legacy_users'])
-# database_utils.DatabaseConnector.upload_to_db(cleaned_user_data, 'dim_users')
-#cleaned_user_data.to_csv('legacy_users.csv', encoding= 'utf-8-sig')
-# df2 = DataExtractor.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
-# cleaned_card_data = data_cleaning.Dataclean.clean_card_data(df2)
-# database_utils.DatabaseConnector.upload_to_db(cleaned_card_data, 'dim_card_details')
-#cleaned_card_data.to_csv('card_details.csv')
-# DataExtractor.list_number_of_stores('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores')
-# store_data = DataExtractor.retrieve_stores_data('https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/')
-# store_data = data_cleaning.Dataclean.clean_store_data(store_data)
-# database_utils.DatabaseConnector.upload_to_db(store_data, 'dim_store_details')
-# products_data = DataExtractor.extract_from_s3('s3://data-handling-public/products.csv')
-# cleaned_products =data_cleaning.Dataclean.clean_product_details(products_data)
-# cleaned_products.to_csv('cleaned_products.csv')
-#database_utils.DatabaseConnector.upload_to_db(cleaned_products, 'dim_products')
-
+                        for table in table_name) 

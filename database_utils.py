@@ -3,8 +3,9 @@ import pandas as pd
 from sqlalchemy import create_engine, inspect
 
 class DatabaseConnector:
-
+   
     
+   
    def upload_to_db(dataframe: pd.DataFrame, table_name: str):
     """
     Creates a SQLalchmey engine to a postgres database then uploads the dataframe
@@ -12,10 +13,8 @@ class DatabaseConnector:
     Input: Data to be uploaded (DataFrame)
     Input: Table_Name to be saved (String)
     """
-    engine = create_engine('postgresql://postgres:Barcemo123@localhost:5432/Sales_Data')
+    engine = create_engine('postgresql://postgres:Barcemo123@localhost:5432/Sale_Data')
     dataframe.to_sql(table_name, engine, if_exists= 'replace', index= False)
-    # with engine.connect() as con:
-    #     con.execute('ALTER TABLE public.dim_date_times ALTER COLUMN month TYPE INT USING month::integer;')
     
     
     pass
@@ -62,7 +61,3 @@ class DatabaseConnector:
             data_loaded = yaml.safe_load(stream)
            
     return data_loaded
-
-# dictionary_cred = DatabaseConnector.read_db_creds()
-# engine = DatabaseConnector.init_db_engine(database_credentials=dictionary_cred)
-# DatabaseConnector.list_db_tables(engine)
