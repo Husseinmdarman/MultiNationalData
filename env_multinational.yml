@@ -1,0 +1,44 @@
+name: multinational
+channels:
+  - defaults
+dependencies:
+  - bzip2=1.0.8=he774522_0
+  - ca-certificates=2023.08.22=haa95532_0
+  - libffi=3.4.4=hd77b12b_0
+  - openssl=3.0.11=h2bbff1b_2
+  - pip=23.3=py311haa95532_0
+  - python=3.11.5=he1021f5_0
+  - setuptools=68.0.0=py311haa95532_0
+  - sqlite=3.41.2=h2bbff1b_0
+  - tk=8.6.12=h2bbff1b_0
+  - vc=14.2=h21ff451_1
+  - vs2015_runtime=14.27.29016=h5e58377_2
+  - wheel=0.41.2=py311haa95532_0
+  - xz=5.4.2=h8cc25b3_0
+  - zlib=1.2.13=h8cc25b3_0
+  - pip:
+      - boto3==1.28.69
+      - botocore==1.31.69
+      - certifi==2023.7.22
+      - charset-normalizer==3.3.1
+      - distro==1.8.0
+      - greenlet==3.0.0
+      - idna==3.4
+      - jmespath==1.0.1
+      - jpype1==1.4.1
+      - numpy==1.26.1
+      - packaging==23.2
+      - pandas==2.1.1
+      - psycopg2==2.9.9
+      - python-dateutil==2.8.2
+      - pytz==2023.3.post1
+      - pyyaml==6.0.1
+      - requests==2.31.0
+      - s3transfer==0.7.0
+      - six==1.16.0
+      - sqlalchemy==2.0.22
+      - tabula-py==2.8.2
+      - typing-extensions==4.8.0
+      - tzdata==2023.3
+      - urllib3==2.0.7
+prefix: C:\Users\husse\AppData\Local\miniconda3\envs\multinational
